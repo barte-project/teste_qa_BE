@@ -106,7 +106,40 @@ describe('Cadastrar loja', () => {
 
 
 
+  
+  it('Login Loja', () => {
 
+
+    cy.api({
+      method: 'POST',
+      url: url + 'service/core/public/auth/sign-in',
+
+
+      body:{
+        "email": EmailLoja,
+        "pass": "123456789"
+    },
+
+      headers: {
+
+        'accept': 'text/plain',
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozi lla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
+      },
+
+
+      failOnStatusCode: false,
+    }).then(Response => {
+
+
+      expect(Response.status).to.eq(200)
+
+    })
+
+  })
+
+
+  
 
   it('Loja Duplicada', () => {
 
