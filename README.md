@@ -1,1 +1,7 @@
-# teste_qa_BE
+Como instalar
+
+npm install
+
+Como executar
+
+npx cypress run
