@@ -1,1 +1,11 @@
+/cypress/reports/html/*.*
+/cypress/reports/html/json/*.*
+/cypress/reports/html/*.*
+/cypress/screenshots/*.*
+cypress/videos/*.*/
+/cypress/reports/*.*
 /node_modules
+/reports/*.*
+/cypress/screenshots/*.*
+/cypress/videos/Ventes/*.*
+/cypress/videos/Achats/*.*git 
