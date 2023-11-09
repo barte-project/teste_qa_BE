@@ -63,7 +63,7 @@ describe('Cadastrar loja', () => {
     })
   })
 
-
+  context('Fluxo Principal', () => {
   it('Cadastrar Loja', () => {
 
     cy.api({
@@ -138,8 +138,8 @@ describe('Cadastrar loja', () => {
 
   })
 
-
-  
+  })
+  context('Fluxo Exceção', () => {
 
   it('Loja Duplicada', () => {
 
@@ -195,4 +195,4 @@ describe('Cadastrar loja', () => {
 
 
 })
-
+})
