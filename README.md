@@ -2,9 +2,8 @@
 
     npm install
 
-#Como executar
+# Como executar por linha de comando
 
-## Execucao linha de comando 
     npx cypress run
 
 # Execucao framework cypress
