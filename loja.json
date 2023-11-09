@@ -1,0 +1,42 @@
+{
+  "Loja_Duplicada":
+ 
+   {
+    "cnpj":  "26439100000102",
+    "companyName":"teste loja duplicada",
+    "domainUrl": "barte.com",
+    "userAdmin": {
+        "email": "rafael.suzano@bart.com",
+        "password": "123456789"
+    },
+    "acceptTerm": {
+        "ip": "170.254.145.197",
+        "dateTime": "2023-06-19T16:42:42.679Z",
+        "userTerms": true,
+        "cookiePolicy": true,
+        "privacyPolicy": true
+    }
+   },
+   "Loja_Sem_CNPJ":
+ 
+   {
+    "cnpj":  null,
+    "companyName":"teste loja SEM CNPJ",
+    "domainUrl": "barte.com",
+    "userAdmin": {
+        "email": "rafael.suzano@bart.com",
+        "password": "123456789"
+    },
+    "acceptTerm": {
+        "ip": "170.254.145.197",
+        "dateTime": "2023-06-19T16:42:42.679Z",
+        "userTerms": true,
+        "cookiePolicy": true,
+        "privacyPolicy": true
+    }
+   }
+
+  
+ 
+ }
+ 
