@@ -1,7 +1,11 @@
-Como instalar
+# Como instalar
 
-npm install
+    npm install
 
-Como executar
+#Como executar
 
-npx cypress run
+## Execucao linha de comando 
+    npx cypress run
+
+# Execucao framework cypress
+    npx cypress opem
