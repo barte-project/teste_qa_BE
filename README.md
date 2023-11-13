@@ -7,4 +7,4 @@
     npx cypress run
 
 # Execucao framework cypress
-    npx cypress opem
+    npx cypress open
