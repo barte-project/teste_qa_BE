@@ -1,3 +1,6 @@
+# Requisitos
+    Nodejs
+
 # Como instalar
 
     npm install
