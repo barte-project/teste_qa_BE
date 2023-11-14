@@ -8,6 +8,8 @@ let dt_loja
 let msg
 let NomeLoja
 let EmailLoja
+
+let TOKEN
 let create_array = (total, numero) => Array.from(Array(total), () => number_random(numero));
 let number_random = (number) => (Math.round(Math.random() * number));
 let mod = (dividendo, divisor) => Math.round(dividendo - (Math.floor(dividendo / divisor) * divisor));
@@ -43,7 +45,7 @@ function geraStringAleatoria(tamanho) {
   var stringAleatoria = '';
   var caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (var i = 0; i < tamanho; i++) {
-      stringAleatoria += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    stringAleatoria += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
   }
   return stringAleatoria;
 }
@@ -52,38 +54,39 @@ function geraStringAleatoria(tamanho) {
 
 describe('Cadastrar loja', () => {
 
- NomeLoja = "Loja_"+ geraStringAleatoria(6)
- EmailLoja =  NomeLoja + "@email.com" 
+  NomeLoja = "Loja_" + geraStringAleatoria(6)
+  EmailLoja = NomeLoja + "@email.com"
   before(() => {
-    
-    
-    
+
+
+
     cy.fixture('loja.json').then(dt_loja => {
       dt_loja1 = dt_loja;
     })
   })
 
   context('Fluxo Principal', () => {
-  it('Cadastrar Loja', () => {
+    it('Cadastrar Loja', () => {
 
-    cy.api({
-      method: 'POST',
-      url: url + 'service/core/public/sellers',
-      body:{
-        "cnpj": cnpj(),
-        "companyName": NomeLoja,
-        "domainUrl": "barte.com",
-        "userAdmin": {
-          "email": EmailLoja,
-          "password": "123456789"
+      cy.api({
+        method: 'POST',
+        url: url + 'service/core/public/sellers',
+        body: {
+          "cnpj": cnpj(),
+          "companyName": NomeLoja,
+          "domainUrl": "barte.com",
+          "userAdmin": {
+            "email": EmailLoja,
+            "password": "123456789"
+          },
+          "acceptTerm": {
+            "ip": "170.254.145.197",
+            "dateTime": "2023-06-19T16:42:42.679Z",
+            "userTerms": true,
+            "cookiePolicy": true,
+            "privacyPolicy": true
+          }
         },
-        "acceptTerm": {
-          "ip": "170.254.145.197",
-          "dateTime": "2023-06-19T16:42:42.679Z",
-          "userTerms": true,
-          "cookiePolicy": true,
-          "privacyPolicy": true
-        }} ,
 
 
         headers: {
@@ -102,97 +105,135 @@ describe('Cadastrar loja', () => {
 
       })
 
-  })
+    })
 
 
 
-  
-  it('Login Loja', () => {
 
 
-    cy.api({
-      method: 'POST',
-      url: url + 'service/core/public/auth/sign-in',
+
+    context('Configuração da Loja', () => {
 
 
-      body:{
-        "email": EmailLoja,
-        "pass": "123456789"
-    },
 
-      headers: {
-
-        'accept': 'text/plain',
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozi lla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
-      },
+      it('Login backoffice', () => {
 
 
-      failOnStatusCode: false,
-    }).then(Response => {
+        cy.api({
+          method: 'POST',
+          url: url + 'service/core/public/auth/barte/sign-in',
 
 
-      expect(Response.status).to.eq(200)
+          body: {
+            "email": "robson.lima.backoffice@barte.com",
+            "pass": "DEwsV51qP!"
+        },
+
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': 'AWSALB=ZTAiIPYhPsqyUb+Vv2ImOtu/W0Srrjy6BbgHh71YLB74vmPpHwysJtXZ+12u9C3+Y57Qq2mSf+AGXdOMxD9Oc3EliLNwCh31OixFEsj0ZenCw8LJ7Tmxjhc6dO8D; AWSALBCORS=ZTAiIPYhPsqyUb+Vv2ImOtu/W0Srrjy6BbgHh71YLB74vmPpHwysJtXZ+12u9C3+Y57Qq2mSf+AGXdOMxD9Oc3EliLNwCh31OixFEsj0ZenCw8LJ7Tmxjhc6dO8D'
+          },
+
+          failOnStatusCode: false,
+        }).then(Response => {
+          TOKEN = ((Response.body['token']))
+
+          expect(Response.status).to.eq(200)
+          cy.log(TOKEN)
+
+        })
+
+      })
+
+
+
+      it('ID Seller', () => {
+
+
+        cy.api({
+          method: 'GET',
+          url: url + 'service/core/sellers?size=20&companyName=' + NomeLoja,
+
+
+
+          headers: {
+
+            'Authorization': 'Bearer ' + TOKEN,
+ 
+          },
+
+          failOnStatusCode: false,
+        }).then(Response => {
+
+
+          expect(Response.status).to.eq(200)
+
+
+        })
+
+      })
+
+
 
     })
 
-  })
 
   })
+
   context('Fluxo Exceção', () => {
 
-  it('Loja Duplicada', () => {
+    it('Loja Duplicada', () => {
 
-    cy.api({
-      method: 'POST',
-      url: url + 'service/core/public/sellers',
-      body: dt_loja1['Loja_Duplicada'],
+      cy.api({
+        method: 'POST',
+        url: url + 'service/core/public/sellers',
+        body: dt_loja1['Loja_Duplicada'],
 
-      headers: {
+        headers: {
 
-        'accept': 'text/plain',
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozi lla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
-      },
-
-
-      failOnStatusCode: false,
-    }).then(Response => {
-      msg = (JSON.stringify(Response.body['errors']))
-      assert(msg, msgLojaDuplicada)
-      expect(Response.status).to.eq(400)
-
-    })
-
-  })
-
-  it('Loja Sem CNPJ', () => {
-
-    cy.api({
-      method: 'POST',
-      url: url + 'service/core/public/sellers',
-      body: dt_loja1['Loja_Sem_CNPJ'],
-
-      headers: {
-
-        'accept': 'text/plain',
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozi lla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
-      },
+          'accept': 'text/plain',
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozi lla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
+        },
 
 
-      failOnStatusCode: false,
-    }).then(Response => {
+        failOnStatusCode: false,
+      }).then(Response => {
+        msg = (JSON.stringify(Response.body['errors']))
+        assert(msg, msgLojaDuplicada)
+        expect(Response.status).to.eq(400)
 
-      msg = (JSON.stringify(Response.body['errors']))
-      cy.log(JSON.stringify(Response.body))
-      assert(msg, msgSemCNPJ)
-      expect(Response.status).to.eq(400)
+      })
 
     })
 
+    it('Loja Sem CNPJ', () => {
+
+      cy.api({
+        method: 'POST',
+        url: url + 'service/core/public/sellers',
+        body: dt_loja1['Loja_Sem_CNPJ'],
+
+        headers: {
+
+          'accept': 'text/plain',
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozi lla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
+        },
+
+
+        failOnStatusCode: false,
+      }).then(Response => {
+
+        msg = (JSON.stringify(Response.body['errors']))
+        cy.log(JSON.stringify(Response.body))
+        assert(msg, msgSemCNPJ)
+        expect(Response.status).to.eq(400)
+
+      })
+
+    })
+
+
   })
-
-
-})
 })
